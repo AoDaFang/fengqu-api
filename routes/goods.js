@@ -12,8 +12,12 @@ var ctrl = require('../controllers/GoodsController')
 //     .get('/like', ctrl.like_get)
 //     .delete('/like', ctrl.like_delete);
 
+//总的商品列表
+router.get('/',ctrl.list)
 
+//获取闪购商品
 router.get('/ltngoods', ctrl.ltngoods)
+
 
 //添加用户想看   post http://localhost:3000/users/like    ?movie_id=&uid=
 //查询是否想看   get  http://localhost:3000/users/like    ?uid=

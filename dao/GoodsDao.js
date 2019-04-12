@@ -6,6 +6,11 @@ exports.ltngoods = function(uid,movie_id){
     var sql = "select * from tb_ltn_goods"
     return MySQL.query(sql)
 }
+exports.list = function (page, size) {
+    let sql = 'select * from tb_goods limit ?,?';
+    let data = [parseInt((page-1)*size), parseInt(size)]
+    return MySQL.query(sql, data)
+}
 
 
 

@@ -19,6 +19,20 @@ exports.ltngoods = async function(req,res){
     res.send(ret)
 }
 
+exports.list = async function (req, res) {
+    let ret = {code:1, msg:"ok"};
+
+    let {page,size} = req.query
+
+    if(!page) page=1;
+    if(!size) size=5;
+
+    let results = await dao.list(page, size)
+
+    ret.list = results;
+    res.send(ret)
+}
+
 
 
 

@@ -6,6 +6,8 @@ var ctrl = require('../controllers/HomeController')
 /* restful api */
 router.get('/adslist', ctrl.adslist)
 
+router.get('/homeactive',ctrl.homeActive)
+
 
 
 router.get('/sendsms', ctrl.sendSMS);
