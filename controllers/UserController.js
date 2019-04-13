@@ -1,76 +1,77 @@
-const dao = require('../dao/GoodsDao');
+const dao = require('../dao/UserDao');
 const token = require('../utils/token');
 
+//登录
+exports.login=async function(req, res, next){
+    let ret={
+        code:1,msg:"login ok"
+    }
+    var {phone,password} = req.body
 
-
-//获取轮播图
-exports.ltngoods = async function(req,res){
-    let ret={code:1,msg:"ok"}
-
-    let results = await dao.ltngoods()
+    var results = await dao.login(phone,password)
 
     if(results.length == 0){
         ret.code = 0
-        ret.msg = "查询失败"
-    }else{
-        ret.list = results
+        ret.msg = "error"
+    }
+
+    res.send(ret)
+}
+//注册
+exports.register = async function (req, res, next) {
+    let ret={
+        code:1,msg:"register ok"
+    }
+    var {phone,password, msg} = req.body
+    console.log(password)
+
+    //首先查询phone和msg是否匹配
+    var msgObj = await dao.getMsg(phone)
+    if(msgObj[0].temp_msg != msg){
+        ret.code = 0
+        ret.msg = "短信验证码错误"
+        res.send(ret)
+        return
+    }
+
+
+    var results = await dao.register(phone,password)
+
+    if(results.rowsAffected == 0){
+        ret.code = 0
+        ret.msg = "error"
     }
 
     res.send(ret)
 }
 
-//分页查询商品列表
-exports.list = async function (req, res) {
-    let ret = {code:1, msg:"ok"};
-
-    let {page,size} = req.query
-
-    if(!page) page=1;
-    if(!size) size=5;
-
-    let results = await dao.list(page, size)
-
-    ret.list = results;
-    res.send(ret)
-}
-
-//获取单个商品详情
-exports.goodsDetail = async function (req, res) {
-    let ret = {code:1, msg:"ok"};
-
-    let {id} = req.query
-
-    let results = await dao.goodsDetailById(id)
-    console.log(results)
-    if(results.length == 1){
-        ret.item = results[0]
-    }else{
-        ret.code = 0;
-        ret.msg = '没有商品'
+//短信验证码
+exports.addmsgcode = async function (req, res, next) {
+    let ret={
+        code:1,msg:"code ok"
     }
 
-    res.send(ret)
-}
-//商品搜索
-exports.search = async function (req,res) {
-    let ret = {code:1, msg:"ok"};
+    var {phone} = req.query
 
-    let {name} = req.query
-
-    let results = await dao.search(name)
-    if(results.length != 0){
-        ret.list = results
-    }else{
-        ret.code = 0;
-        ret.msg = '没有商品'
+    if(!phone){
+        ret.code = 0
+        ret.msg = "请传入手机号"
+        res.send(ret)
+        return
     }
 
+    var msgcode = "" + parseInt(Math.random() * 10) + parseInt(Math.random() * 10) + parseInt(Math.random() * 10) +
+        parseInt(Math.random() * 10)
 
+    var results = await dao.addmsgcode(phone,msgcode)
 
+    if(results.rowsAffected == 0){
+        ret.code = 0
+        ret.msg = "error"
+    }
+    ret.msgcode = msgcode
     res.send(ret)
 }
-
-
 
 
 
@@ -185,41 +186,7 @@ exports.reg=async function(req, res, next) {
     //     res.send(response);
     // })
 }
-exports.login=async function(req, res, next){
-    let ret={
-        code:1,msg:"login ok"
-    }
-    let reqData = {}
-    if(req.method=="GET")
-        reqData = req.query
-    else
-        reqData = req.body//phone,passwd
-    let {phone,passwd }= reqData;
 
-    try{
-        let users = await dao.getUserByPhone(phone,passwd);
-        console.log(users[0]);
-        let now_uid = users[0].id;
-        if(users.length==1){
-            let header = {
-                "typ": "JWT",
-                "alg": "HS256"
-            };
-            let paylaod = {
-                uid:now_uid
-            }
-            let now_token = token.createToken(header,paylaod,1200000);
-            ret.token = now_token;
-
-        }else{
-            ret.code = 0
-            ret.msg = '用户名或密码错误'
-        }
-    }catch(e){
-        console.log(e)
-    }
-    res.send(ret)
-}
 exports.logout=async function(req, res, next){
     let ret={
         code:1,msg:"logout ok"

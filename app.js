@@ -10,6 +10,7 @@ var token = require('./utils/token')
 var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 var goodsRouter = require("./routes/goods")
+var userRouter = require("./routes/user")
 var app = express();
 
 // view engine setup
@@ -59,6 +60,7 @@ app.all('*', function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/home', homeRouter);
 app.use('/goods', goodsRouter)
+app.use('/user', userRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
