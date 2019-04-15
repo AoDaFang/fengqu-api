@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 var goodsRouter = require("./routes/goods")
 var userRouter = require("./routes/user")
+var cartRouter = require('./routes/cart')
 var app = express();
 
 // view engine setup
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 //---------token 拦截器---------
 // app.use('*',function (req,res,next) {
@@ -61,6 +63,7 @@ app.use('/', indexRouter);
 app.use('/home', homeRouter);
 app.use('/goods', goodsRouter)
 app.use('/user', userRouter)
+app.use('/cart', cartRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

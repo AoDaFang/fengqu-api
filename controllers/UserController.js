@@ -15,6 +15,8 @@ exports.login=async function(req, res, next){
         ret.msg = "error"
     }
 
+    ret.user = results[0]
+
     res.send(ret)
 }
 //注册
@@ -37,7 +39,7 @@ exports.register = async function (req, res, next) {
 
     var results = await dao.register(phone,password)
 
-    if(results.rowsAffected == 0){
+    if(results.affectedRows == 0){
         ret.code = 0
         ret.msg = "error"
     }
@@ -65,7 +67,7 @@ exports.addmsgcode = async function (req, res, next) {
 
     var results = await dao.addmsgcode(phone,msgcode)
 
-    if(results.rowsAffected == 0){
+    if(results.affectedRows == 0){
         ret.code = 0
         ret.msg = "error"
     }

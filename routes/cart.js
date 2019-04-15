@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var ctrl = require('../controllers/HomeController')
+var ctrl = require('../controllers/CartController')
 
 
 /* restful api */
-router.get('/adslist', ctrl.adslist)
+router.get('/', ctrl.getList)
+    .post('/',ctrl.add)
+    .delete("/", ctrl.delete)
 
-router.get('/homeactive',ctrl.homeActive)
 
 
 

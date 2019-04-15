@@ -29,5 +29,4 @@ router.get('/ltngoods', ctrl.ltngoods)
 //查询是否想看   get  http://localhost:3000/users/like    ?uid=
 //用户不想看     delete http://localhost:3000/users/like  ?movie_id=&uid=
 
-router.post('/remark',ctrl.add_Remark);//添加评论
 module.exports = router;
