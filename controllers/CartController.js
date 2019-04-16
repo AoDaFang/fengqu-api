@@ -34,7 +34,15 @@ exports.add = async function (req,res) {
 
     var result = await dao.getItem(user_id, goods_id);
 
-    num = parseInt(result[0].num) + parseInt(num)
+    var temp_num = 0;
+
+    if(result.length == 0){
+        temp_num = 0;
+    }else{
+        temp_num = result[0].num
+    }
+
+    num = parseInt(temp_num) + parseInt(num)
     console.log(num)
     if(result.length > 0 ){
         //执行修改
