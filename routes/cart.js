@@ -3,9 +3,12 @@ var router = express.Router();
 var ctrl = require('../controllers/CartController')
 
 
+router.post('/addgoods',ctrl.add)
+router.post('/modifycount',ctrl.modifyCount)
+
 /* restful api */
 router.get('/', ctrl.getList)
-    .post('/',ctrl.add)
+
     .delete("/", ctrl.delete)
 
 

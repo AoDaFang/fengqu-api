@@ -7,7 +7,9 @@ const token = require('../utils/token');
 exports.getList = async function(req,res){
     let ret={code:1,msg:"ok"}
 
-    let results = await dao.getList()
+    let {user_id} = req.query
+
+    let results = await dao.getList(user_id)
 
     for(var item of results){
         var goods_item = await goodsDao.goodsDetailById(item.goods_id)
@@ -25,16 +27,18 @@ exports.getList = async function(req,res){
     res.send(ret)
 }
 
-//添加购物信息  或者修改购物信息
+//在商品详情页点击添加购物车进行的操作，添加购物信息(没有这条购物车信息的情况下)  或者增加购物车数量
 exports.add = async function (req,res) {
     let ret={code:1,msg:"ok"}
     var {user_id,goods_id,num} = req.body
 
     var result = await dao.getItem(user_id, goods_id);
+
+    num = parseInt(result[0].num) + parseInt(num)
+    console.log(num)
     if(result.length > 0 ){
         //执行修改
         var updateResult = await dao.updateItem(user_id, goods_id, num);
-        console.log(updateResult)
         if(updateResult.affectedRows == 1){
             ret.msg = "修改成功"
         }else{
@@ -49,12 +53,34 @@ exports.add = async function (req,res) {
                 ret.msg = "添加成功"
             }else{
                 ret.code = 0;
-                ret.msg = "修改失败"
+                ret.msg = "添加失败"
             }
         }catch (e){
             ret.code = 0;
             ret.msg = e
         }
+    }
+    res.send(ret)
+}
+
+//修改商品数量
+exports.modifyCount = async function (req, res) {
+    let ret={code:1,msg:"ok"}
+    var {user_id,goods_id,num} = req.body
+
+    var result = await dao.getItem(user_id, goods_id);
+    if(result.length > 0 ){
+        //执行修改
+        var updateResult = await dao.updateItem(user_id, goods_id, num);
+        if(updateResult.affectedRows == 1){
+            ret.msg = "修改成功"
+        }else{
+            ret.code = 0;
+            ret.msg = "修改失败,数据库修改失败"
+        }
+    }else{
+        ret.code = 0;
+        ret.msg = "修改失败，购物车没有这条数据"
     }
     res.send(ret)
 }

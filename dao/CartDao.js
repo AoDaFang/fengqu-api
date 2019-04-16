@@ -2,9 +2,10 @@
 //持久化层  数据层
 const MySQL = require('./MySQL')
 
-exports.getList = function(){
-    var sql = "select * from tb_cart"
-    return MySQL.query(sql)
+exports.getList = function(user_id){
+    var sql = "select * from tb_cart where user_id=?"
+    var data = [user_id]
+    return MySQL.query(sql, data)
 }
 
 
